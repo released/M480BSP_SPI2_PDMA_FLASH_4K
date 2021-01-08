@@ -624,14 +624,6 @@ void SYS_Init(void)
     SYS->GPB_MFPH &= ~(SYS_GPB_MFPH_PB12MFP_Msk | SYS_GPB_MFPH_PB13MFP_Msk);
     SYS->GPB_MFPH |= (SYS_GPB_MFPH_PB12MFP_UART0_RXD | SYS_GPB_MFPH_PB13MFP_UART0_TXD);
 
-
-    CLK_EnableModuleClock(UART5_MODULE);
-    /* Select UART clock source from HXT */
-    CLK_SetModuleClock(UART5_MODULE, CLK_CLKSEL3_UART5SEL_HIRC, CLK_CLKDIV4_UART5(1));
-
-    CLK_SetModuleClock(SPI0_MODULE, CLK_CLKSEL2_SPI0SEL_HIRC, MODULE_NoMsk);
-    CLK_EnableModuleClock(SPI0_MODULE);
-
     CLK_SetModuleClock(SPI2_MODULE, CLK_CLKSEL2_SPI2SEL_HIRC, MODULE_NoMsk);
     CLK_EnableModuleClock(SPI2_MODULE);
 
@@ -642,48 +634,7 @@ void SYS_Init(void)
 	
     CLK_EnableModuleClock(TMR1_MODULE);
     CLK_SetModuleClock(TMR1_MODULE, CLK_CLKSEL1_TMR1SEL_HIRC, 0);
-
-    CLK_EnableModuleClock(QEI0_MODULE);
-
-    CLK_EnableModuleClock(WDT_MODULE);
-    CLK_SetModuleClock(WDT_MODULE, CLK_CLKSEL1_WDTSEL_LIRC, 0);
 	
-	
-    /* Update System Core Clock */
-    /* User can use SystemCoreClockUpdate() to calculate SystemCoreClock. */
-    SystemCoreClockUpdate();
-
-    SYS->GPA_MFPL &= ~(SYS_GPA_MFPL_PA5MFP_Msk  );
-    SYS->GPA_MFPL |= (SYS_GPA_MFPL_PA5MFP_UART5_TXD );
-
-    SYS->GPA_MFPL &= ~(SYS_GPA_MFPL_PA4MFP_Msk | SYS_GPA_MFPL_PA3MFP_Msk );
-    SYS->GPA_MFPL |= (SYS_GPA_MFPL_PA4MFP_QEI0_A | SYS_GPA_MFPL_PA3MFP_QEI0_B );
-
-	/*
-		SPI0 LED driver x 5
-
-		SPI0_LED_NSS0 : PA.6
-		SPI0_LED_NSS1 : PA.7		
-		SPI0_LED_NSS2 : PA.11
-		
-		SPI0_LED_NSS3 : PF.1 * ICE_CLK	
-		SPI0_LED_NSS4 : PF.0 * ICE_DAT
-
-		SDB : PC.14	//SNLED27351 , Hardware power down the chip when pull to low. 
-
-		SPI0_LED_MOSI : PA.0
-		SPI0_LED_MISO : PA.1		
-		SPI0_LED_CLK : PA.2
-
-	*/
-    SYS->GPA_MFPL &= ~(SYS_GPA_MFPL_PA2MFP_Msk | SYS_GPA_MFPL_PA1MFP_Msk| SYS_GPA_MFPL_PA0MFP_Msk);
-    SYS->GPA_MFPL |= SYS_GPA_MFPL_PA2MFP_SPI0_CLK| SYS_GPA_MFPL_PA1MFP_SPI0_MISO| SYS_GPA_MFPL_PA0MFP_SPI0_MOSI ;
-	
-    /* Enable SPI0 clock pin schmitt trigger */
-    PA->SMTEN |= (GPIO_SMTEN_SMTEN2_Msk | GPIO_SMTEN_SMTEN1_Msk | GPIO_SMTEN_SMTEN0_Msk);
-    /* Enable SPI0 I/O high slew rate */
-	GPIO_SetSlewCtl(PA, (BIT2 | BIT1 | BIT1), GPIO_SLEWCTL_FAST);
-
 
 	/* 
 		SPI2 flash , 
