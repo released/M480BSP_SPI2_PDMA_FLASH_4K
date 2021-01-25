@@ -48,7 +48,7 @@ void SpiFlash_RX_PDMA(uint8_t* Rx , uint16_t len)
 
 //				dump_buffer_hex(Rx,len);
 				
-				TIMER_Delay(TIMER0,500);
+				while (SPI_IS_BUSY(SPI_FLASH_PORT));	//TIMER_Delay(TIMER0,500);
     			SPI_FLASH_CS_HIGH;				
                 break;
             }
@@ -106,7 +106,7 @@ void SpiFlash_TX_PDMA(uint8_t* Tx , uint16_t len)
                 /* Disable SPI PDMA TX function */
                 SPI_DISABLE_TX_PDMA(SPI_FLASH_PORT);
 
-				TIMER_Delay(TIMER0,500);				
+				while (SPI_IS_BUSY(SPI_FLASH_PORT));	//TIMER_Delay(TIMER0,500);				
 				SPI_FLASH_CS_HIGH;
 				
                 break;
